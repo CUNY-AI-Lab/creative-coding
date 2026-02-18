@@ -90,11 +90,11 @@ This workshop ties together creative coding and "vibe coding" with generative AI
 
 ## **Spectrum**
 
-### **Vibe → deliberate collaboration**
+### **Vibe → deliberate practice**
 
 * Place AI-based coding on a continuum of control  
 * One-shot → iterate → constrain  
-* Decompose tasks to increase reflection (Xu et al., 2024\)  
+* Decompose tasks to increase decision points (Xu et al., 2024\)  
 * Design workflow to push toward deliberate choices 
 
 # **Slide 9**
