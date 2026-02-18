@@ -65,15 +65,19 @@ export function dataFlow(container) {
     if (firstFrame) { autoTimer = t + 3000; firstFrame = false; }
     const { width: W, height: H } = resize();
 
-    // --- Layout ---
-    const labelX = W * 0.18;
-    const modelCX = W * 0.44;
+    // --- Layout (responsive) ---
+    const compact = W < 420;
+    const labelX = compact ? W * 0.26 : W * 0.18;
+    const modelCX = compact ? W * 0.52 : W * 0.44;
     const modelCY = H * 0.50;
     const modelR = Math.min(W, H) * 0.08;
     const srcYs = [H * 0.17, H * 0.50, H * 0.83];
     const outX = modelCX + modelR + W * 0.04;
-    const labelSz = Math.max(13, W * 0.024);
-    const monoSz = Math.max(11, W * 0.018);
+    const labelSz = Math.max(11, W * 0.024);
+    const monoSz = Math.max(10, W * 0.018);
+    const srcLabels = compact
+      ? ['GitHub', 'SO', 'Docs']
+      : ['GitHub', 'Stack Overflow', 'Docs'];
 
     // Bezier paths from each source → model edge.
     const paths = srcYs.map((sy, i) => {
@@ -114,7 +118,7 @@ export function dataFlow(container) {
     ctx.font = `600 ${labelSz}px ui-sans-serif, system-ui, sans-serif`;
     for (let i = 0; i < SOURCES.length; i++) {
       ctx.fillStyle = 'rgba(192,192,192,0.55)';
-      ctx.fillText(SOURCES[i].label, labelX, srcYs[i]);
+      ctx.fillText(srcLabels[i], labelX, srcYs[i]);
     }
 
     // --- Spawn dots ---
@@ -190,24 +194,33 @@ export function dataFlow(container) {
 
       const promptFade = doneTyping ? Math.max(0, 1 - (elapsed - typeDur - 2000) / 1500) : 1;
       const promptY = modelCY - modelR - Math.max(24, H * 0.055);
+      const promptSz = compact ? Math.max(9, W * 0.028) : monoSz;
 
-      ctx.font = `${monoSz}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-      ctx.textAlign = 'center';
+      ctx.font = `${promptSz}px ui-monospace, SFMono-Regular, Menlo, monospace`;
       ctx.textBaseline = 'bottom';
+
+      // Position: left-aligned on compact, centered on desktop.
+      const promptAnchorX = compact ? W * 0.06 : modelCX;
+      ctx.textAlign = compact ? 'left' : 'center';
 
       // ">" prefix.
       const fullW = ctx.measureText(promptText).width;
+      const prefixOffset = compact ? 0 : -fullW * 0.5 - 10;
       ctx.fillStyle = `rgba(192,192,192,${0.4 * promptFade})`;
-      ctx.fillText('>', modelCX - fullW * 0.5 - 10, promptY);
+      ctx.fillText('>', promptAnchorX + prefixOffset, promptY);
       // Typed text.
+      const textOffset = compact ? ctx.measureText('> ').width : 0;
       ctx.fillStyle = `rgba(255,255,255,${0.85 * promptFade})`;
-      ctx.fillText(typed, modelCX, promptY);
+      ctx.fillText(typed, promptAnchorX + textOffset, promptY);
 
       // Blink cursor.
       if (!doneTyping && Math.floor(t / 480) % 2 === 0) {
-        const cX = modelCX + ctx.measureText(typed).width * 0.5 + 3;
+        const measuredTyped = ctx.measureText(typed).width;
+        const cX = compact
+          ? promptAnchorX + textOffset + measuredTyped + 3
+          : modelCX + measuredTyped * 0.5 + 3;
         ctx.fillStyle = `rgba(255,255,255,${0.7})`;
-        ctx.fillRect(cX, promptY - monoSz, 1.5, monoSz);
+        ctx.fillRect(cX, promptY - promptSz, 1.5, promptSz);
       }
 
       // Pulse on complete.
