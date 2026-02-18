@@ -155,7 +155,7 @@ export function boids(container) {
     // Draw boids.
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'rgba(255,255,255,0.20)';
-    ctx.fillStyle = 'rgba(122,215,255,0.70)';
+    ctx.fillStyle = 'rgba(192,192,192,0.70)';
 
     for (let i = 0; i < boid.length; i++) {
       const b = boid[i];

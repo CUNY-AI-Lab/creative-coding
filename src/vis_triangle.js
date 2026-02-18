@@ -69,7 +69,7 @@ export function triangle(container) {
 
     // Rules → grid
     const gridAlpha = 0.55 * wA;
-    ctx.strokeStyle = `rgba(120,180,255,${gridAlpha})`;
+    ctx.strokeStyle = `rgba(192,192,192,${gridAlpha})`;
     ctx.lineWidth = 1;
     const step = 22;
     for (let x = 0; x <= width; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
@@ -77,7 +77,7 @@ export function triangle(container) {
 
     // Randomness → particles
     const n = Math.floor(240 * wB);
-    ctx.fillStyle = `rgba(255,180,120,${0.55 * wB})`;
+    ctx.fillStyle = `rgba(192,192,192,${0.45 * wB})`;
     for (let i = 0; i < n; i++) {
       const x = Math.random() * width;
       const y = Math.random() * height;
@@ -86,7 +86,7 @@ export function triangle(container) {
     }
 
     // Interpretation → arcs / selected curves
-    ctx.strokeStyle = `rgba(180,255,180,${0.7 * wC})`;
+    ctx.strokeStyle = `rgba(192,192,192,${0.6 * wC})`;
     ctx.lineWidth = 2;
     const k = Math.floor(5 + 8 * wC);
     for (let i = 0; i < k; i++) {

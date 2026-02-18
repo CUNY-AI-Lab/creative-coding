@@ -79,7 +79,7 @@ export function flowField(container) {
     const speed = 0.035;
 
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(122,215,255,0.18)';
+    ctx.strokeStyle = 'rgba(192,192,192,0.18)';
 
     ctx.beginPath();
     for (let i = 0; i < particles.length; i++) {

@@ -25,9 +25,9 @@ export function reflection(container) {
     }
 
     const activities = [
-      { ...fromBary(0.15, 0.35, 0.50), label: 'A1: One Prompt', color: '#00FF41' },
-      { ...fromBary(0.30, 0.30, 0.40), label: 'A2: Iterate',    color: '#4ecdc4' },
-      { ...fromBary(0.55, 0.25, 0.20), label: 'A3: Constraints', color: '#e94560' },
+      { ...fromBary(0.15, 0.35, 0.50), label: 'A1: One Prompt', color: '#999999' },
+      { ...fromBary(0.30, 0.30, 0.40), label: 'A2: Iterate',    color: '#b0b0b0' },
+      { ...fromBary(0.55, 0.25, 0.20), label: 'A3: Constraints', color: '#c0c0c0' },
     ];
 
     ctx.fillStyle = '#0a0a0a';

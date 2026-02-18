@@ -8,7 +8,7 @@ export function constraintGrid(container) {
   const { ctx, resize, destroy } = makeCanvas(container);
 
   const COLS = 12, ROWS = 12;
-  const palette = ['#1a1a2e', '#16213e', '#e94560'];
+  const palette = ['#3a3a3a', '#6a6a6a', '#c0c0c0'];
   let t = 0;
 
   const stop = rafLoop(() => {

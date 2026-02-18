@@ -59,7 +59,7 @@ export function spectrum(container) {
 
     // Left: chaotic particles.
     const particleCount = Math.floor(420 * (1 - v));
-    ctx.fillStyle = `rgba(255,120,180,${0.55 * (1 - v)})`;
+    ctx.fillStyle = `rgba(192,192,192,${0.45 * (1 - v)})`;
     for (let i = 0; i < particleCount; i++) {
       const x = Math.random() * width;
       const y = Math.random() * height;
@@ -73,7 +73,7 @@ export function spectrum(container) {
     const rows = 18;
     const sx = width / cols;
     const sy = height / rows;
-    ctx.strokeStyle = `rgba(120,200,255,${0.45 * flow})`;
+    ctx.strokeStyle = `rgba(192,192,192,${0.45 * flow})`;
     ctx.lineWidth = 2;
     for (let j = 0; j < rows; j++) {
       for (let i = 0; i < cols; i++) {
