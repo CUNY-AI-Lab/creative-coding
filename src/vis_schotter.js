@@ -57,7 +57,7 @@ export function schotter(container) {
   const ro = new ResizeObserver(() => draw());
   ro.observe(container);
 
-  const interval = setInterval(draw, 5000);
+  const interval = setInterval(draw, 3000);
 
   return () => {
     clearInterval(interval);
