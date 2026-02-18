@@ -125,10 +125,14 @@ export function triangle(container) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    ctx.fillStyle = 'rgba(255,255,255,0.65)';
-    ctx.font = '14px ui-monospace, SFMono-Regular, Menlo, monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('Drag point to shift emphasis', 16, height - 18);
+    const captionH = Math.max(28, height * 0.06);
+    ctx.fillStyle = 'rgba(11,14,20,0.85)';
+    ctx.fillRect(0, height - captionH, width, captionH);
+    const capFont = Math.max(12, Math.min(width, height) * 0.028);
+    ctx.font = `${capFont}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Drag point to shift emphasis', width / 2, height - captionH * 0.3);
   });
 
   return () => {

@@ -171,10 +171,15 @@ export function boids(container) {
       ctx.stroke();
     }
 
-    // Small caption.
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.font = '12px ui-monospace, SFMono-Regular, Menlo, monospace';
-    ctx.fillText('Boids (Reynolds, 1986) • tap to reseed', 14, 22);
+    // Caption bar
+    const captionH = Math.max(28, H * 0.06);
+    ctx.fillStyle = 'rgba(5,7,11,0.85)';
+    ctx.fillRect(0, H - captionH, W, captionH);
+    const fontSize = Math.max(12, Math.min(W, H) * 0.028);
+    ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Boids (Reynolds, 1986) \u2022 tap to reseed', W / 2, H - captionH * 0.3);
   });
 
   return () => {

@@ -43,6 +43,8 @@ export function schotter(container) {
     }
 
     // Caption
+    ctx.fillStyle = 'rgba(10,10,10,0.85)';
+    ctx.fillRect(0, height - captionH, width, captionH);
     const fontSize = Math.max(12, Math.min(width, height) * 0.028);
     ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
     ctx.fillStyle = 'rgba(255,255,255,0.5)';

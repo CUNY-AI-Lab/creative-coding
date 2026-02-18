@@ -69,9 +69,14 @@ export function molnarInterruptions(container) {
     ctx.stroke();
 
     // Instruction hint
+    const captionH = Math.max(28, height * 0.06);
+    ctx.fillStyle = 'rgba(10,10,10,0.85)';
+    ctx.fillRect(0, height - captionH, width, captionH);
+    const fontSize = Math.max(12, Math.min(width, height) * 0.028);
+    ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.font = '14px ui-monospace, SFMono-Regular, Menlo, monospace';
-    ctx.fillText('Drag to move interruption', 16, height - 18);
+    ctx.textAlign = 'center';
+    ctx.fillText('Drag to move interruption', width / 2, height - captionH * 0.3);
   });
 
   return () => {
