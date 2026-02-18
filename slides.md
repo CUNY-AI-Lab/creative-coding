@@ -95,7 +95,7 @@ This workshop ties together creative coding and "vibe coding" with generative AI
 * Place AI-based coding on a continuum of control  
 * One-shot → iterate → constrain  
 * Decompose tasks to increase decision points (Xu et al., 2024\)  
-* Design workflow to push toward deliberate choices 
+* Utilize constraints to foster more deliberate choices 
 
 # **Slide 9**
 
