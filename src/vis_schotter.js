@@ -42,11 +42,10 @@ export function schotter(container) {
 
   draw();
 
-  const onClick = () => draw();
-  container.addEventListener('click', onClick);
+  const interval = setInterval(draw, 5000);
 
   return () => {
-    container.removeEventListener('click', onClick);
+    clearInterval(interval);
     destroy();
   };
 }
