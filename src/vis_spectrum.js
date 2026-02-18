@@ -96,16 +96,6 @@ export function spectrum(container) {
     for (let x = 0; x <= width; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke(); }
     for (let y = 0; y <= height; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke(); }
 
-    // Caption bar
-    const captionH = Math.max(28, height * 0.06);
-    const capY = height - captionH - 40; // above the slider UI
-    ctx.fillStyle = 'rgba(7,10,16,0.85)';
-    ctx.fillRect(0, capY, width, captionH);
-    const capFont = Math.max(12, Math.min(width, height) * 0.028);
-    ctx.font = `${capFont}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.textAlign = 'center';
-    ctx.fillText('Drag to shift emphasis', width / 2, capY + captionH * 0.65);
   });
 
   return () => {
