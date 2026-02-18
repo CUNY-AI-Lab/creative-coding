@@ -107,15 +107,17 @@ export function triangle(container) {
     ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.lineTo(C.x, C.y); ctx.closePath();
     ctx.stroke();
 
-    // Labels
+    // Labels — responsive font, shorter on narrow viewports.
+    const lblFont = Math.max(11, Math.min(width, height) * 0.032);
     ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.font = '16px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto';
+    ctx.font = `${lblFont}px ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto`;
+    const narrow = width < 500;
     ctx.textAlign = 'center';
-    ctx.fillText('Rules (System Prompt)', A.x, A.y - 14);
+    ctx.fillText(narrow ? 'Rules' : 'Rules (System Prompt)', A.x, A.y - lblFont * 0.8);
     ctx.textAlign = 'left';
-    ctx.fillText('Randomness (Temperature)', B.x, B.y + 26);
+    ctx.fillText(narrow ? 'Randomness' : 'Randomness (Temperature)', B.x, B.y + lblFont * 1.5);
     ctx.textAlign = 'right';
-    ctx.fillText('Interpretation (Curation)', C.x, C.y + 26);
+    ctx.fillText(narrow ? 'Interpretation' : 'Interpretation (Curation)', C.x, C.y + lblFont * 1.5);
 
     // Draggable point
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
