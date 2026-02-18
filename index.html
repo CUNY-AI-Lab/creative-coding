@@ -380,9 +380,9 @@
         </ul>
       </div>
       <div class="stage stageCenter" aria-label="Prompt scaffold">
-        <pre>Copy/paste prompt scaffold:
+        <pre>Sample prompt:
 
-You are a creative coder.
+Role: You are a creative coder.
 Constraints: vanilla JS only; Canvas; full viewport; no external libraries.
 Aesthetic: monochrome; geometric; early computer art.
 Tech: requestAnimationFrame; mouse interaction.
@@ -415,7 +415,10 @@ Output: return single HTML only (no markdown/explanation).</pre>
         <h2>Constrained Generation</h2>
         <ul>
           <li>Open the Configuration panel (right side)</li>
-          <li>Add a system prompt: "You are a creative coding assistant. Follow constraints exactly as specified. Output single HTML files with embedded CSS and JavaScript."</li>
+          <li>Add a system prompt:</li>
+          <li style="margin-left: 20px;"><pre style="font-size: 11px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px; color: rgba(255,255,255,0.8);">Role: You are a creative coding assistant.
+Constraints: Follow constraints exactly as specified.
+Output: Single HTML files with embedded CSS and JavaScript.</pre></li>
           <li>Try user prompts with specific limits:</li>
           <li style="margin-left: 20px;">"Create a rotating spiral using only triangles"</li>
           <li style="margin-left: 20px;">"Build a rain animation with exactly 4 colors"</li>
