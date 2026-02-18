@@ -29,7 +29,7 @@ export function tenPrint(container) {
   }
 
   function applyStyle() {
-    ctx.strokeStyle = '#5cb870';
+    ctx.strokeStyle = '#c0c0c0';
     ctx.lineWidth = 2;
     ctx.lineCap = 'square';
   }
@@ -57,8 +57,8 @@ export function tenPrint(container) {
       return;
     }
 
-    // ~8 segments/frame → fills a typical stage in ~8–9 seconds.
-    for (let i = 0; i < 8; i++) {
+    // ~4 segments/frame → fills a typical stage in ~16–18 seconds.
+    for (let i = 0; i < 4; i++) {
       if (Math.random() > 0.5) {
         ctx.beginPath();
         ctx.moveTo(x, y);
