@@ -9,7 +9,8 @@ This workshop ties together creative coding and "vibe coding" with generative AI
 ### **Title Slide**
 
 * Zach Muhlbauer & Stefano Morello  
-* CUNY AI Lab · New Media Lab · Teaching and Learning Center · Interactive Technology and Pedagogy Certificate Program  
+* CUNY AI Lab  
+* Interactive Technology and Pedagogy Certificate Program  
 * February 19, 2025 · 4:00 PM  
 * Artifact: Interactive 10 PRINT demonstration
 
