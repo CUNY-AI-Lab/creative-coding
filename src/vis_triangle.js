@@ -48,9 +48,10 @@ export function triangle(container) {
     const { width, height } = resize();
 
     const pad = Math.min(width, height) * 0.12;
+    const botPad = pad + Math.max(20, height * 0.04) + 16; // clear caption bar
     const A = { x: width / 2, y: pad }; // Rules
-    const B = { x: pad, y: height - pad }; // Randomness
-    const C = { x: width - pad, y: height - pad }; // Interpretation
+    const B = { x: pad, y: height - botPad }; // Randomness
+    const C = { x: width - pad, y: height - botPad }; // Interpretation
 
     // Clamp draggable point to triangle.
     const raw = { x: p.x * width, y: p.y * height };
