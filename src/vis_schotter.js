@@ -11,16 +11,19 @@ export function schotter(container) {
     ctx.fillStyle = '#0a0a0a';
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = '#c0c0c0';
-    ctx.lineWidth = 1;
-
     const COLS = 12;
     const ROWS = 22;
+    const captionH = Math.max(28, height * 0.06);
+    const availH = height - captionH;
+    const pad = Math.min(width, availH) * 0.06;
+    const size = Math.min((width - pad * 2) / COLS, (availH - pad * 2) / ROWS);
+    const gridW = COLS * size;
+    const gridH = ROWS * size;
+    const ox = (width - gridW) / 2;
+    const oy = (availH - gridH) / 2;
 
-    const pad = Math.min(width, height) * 0.08;
-    const gridW = width - pad * 2;
-    const gridH = height - pad * 2;
-    const size = Math.min(gridW / COLS, gridH / ROWS);
+    ctx.strokeStyle = '#c0c0c0';
+    ctx.lineWidth = 1;
 
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
@@ -28,8 +31,8 @@ export function schotter(container) {
         const angle = (Math.random() - 0.5) * disorder * Math.PI;
         const dx = (Math.random() - 0.5) * disorder * size;
         const dy = (Math.random() - 0.5) * disorder * size;
-        const cx = pad + col * size + size / 2 + dx;
-        const cy = pad + row * size + size / 2 + dy;
+        const cx = ox + col * size + size / 2 + dx;
+        const cy = oy + row * size + size / 2 + dy;
 
         ctx.save();
         ctx.translate(cx, cy);
@@ -38,6 +41,13 @@ export function schotter(container) {
         ctx.restore();
       }
     }
+
+    // Caption
+    const fontSize = Math.max(12, Math.min(width, height) * 0.028);
+    ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('Georg Nees, Schotter (1968\u201370)', width / 2, height - captionH * 0.3);
   }
 
   draw();
