@@ -25,7 +25,7 @@ export function molnarInterruptions(container) {
   const stop = rafLoop((t) => {
     const { width, height } = resize();
 
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#f7f5ef';
     ctx.fillRect(0, 0, width, height);
 
     const cols = 48;
@@ -39,7 +39,7 @@ export function molnarInterruptions(container) {
     const pulse = 0.06 * baseR * Math.sin(t / 900);
     const voidR = baseR + pulse;
 
-    ctx.strokeStyle = '#c0c0c0';
+    ctx.strokeStyle = '#101010';
     ctx.lineWidth = 2;
 
     // Uniform-ish angle with tiny drift (order)
@@ -62,7 +62,7 @@ export function molnarInterruptions(container) {
     }
 
     // Draw void outline lightly for readability
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.12)';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(cx, cy, voidR, 0, Math.PI * 2);
@@ -70,11 +70,11 @@ export function molnarInterruptions(container) {
 
     // Instruction hint
     const captionH = Math.max(28, height * 0.06);
-    ctx.fillStyle = 'rgba(10,10,10,0.85)';
+    ctx.fillStyle = 'rgba(247,245,239,0.85)';
     ctx.fillRect(0, height - captionH, width, captionH);
     const fontSize = Math.max(12, Math.min(width, height) * 0.028);
     ctx.font = `${fontSize}px ui-monospace, SFMono-Regular, Menlo, monospace`;
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.fillStyle = 'rgba(0,0,0,0.45)';
     ctx.textAlign = 'center';
     ctx.fillText('Drag to move interruption', width / 2, height - captionH * 0.3);
   });
