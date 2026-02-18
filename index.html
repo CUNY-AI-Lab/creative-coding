@@ -1,211 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Creative Coding with Generative AI</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
-<style>
-  .reveal { font-family: 'Courier New', monospace; }
-  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Courier New', monospace; text-transform: none; }
-  .reveal h2 { font-size: 1.4em; }
-  .reveal h3 { font-size: 1em; color: #aaa; }
-  .artifact-container { width: 100%; height: 360px; position: relative; overflow: hidden; margin-top: 10px; }
-  .reveal section { font-size: 0.7em; }
-  .reveal ul, .reveal ol { text-align: left; }
-  .reveal .small { font-size: 0.65em; color: #888; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Creative Coding with Generative AI - Deck</title>
+  <link rel="modulepreload" href="./src/deck.js">
+  <link rel="modulepreload" href="./src/registry.js">
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --fg: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.70);
+      --accent: #7ad7ff;
+      --card: rgba(255,255,255,0.06);
+      --stroke: rgba(255,255,255,0.16);
+    }
+    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg); }
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow: hidden;
+    }
+    header {
+      position: fixed; top: 0; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: linear-gradient(to bottom, rgba(11,14,20,0.95), rgba(11,14,20,0.0));
+      pointer-events: none;
+      z-index: 5;
+    }
+    header .left, header .right { pointer-events: auto; display: flex; gap: 12px; align-items: center; }
+    #counter { font-variant-numeric: tabular-nums; opacity: 0.8; }
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.04);
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    main { height: 100%; }
+    section.slide {
+      position: absolute; inset: 0;
+      display: none;
+      padding: 48px clamp(28px, 4vw, 48px) 24px clamp(48px, 6vw, 96px);
+      box-sizing: border-box;
+      overflow: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    section.slide.active { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 28px); align-content: stretch; }
+    .content {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(32px, 4vw, 48px) clamp(28px, 3.5vw, 44px);
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: var(--card);
+      backdrop-filter: blur(6px);
+    }
+    .content h1 { font-size: clamp(36px, 5vw, 58px); margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.1; }
+    .content .authors { font-size: clamp(20px, 2.4vw, 28px); color: var(--fg); margin: 24px 0 0; font-weight: 500; }
+    .content .orgs { font-size: clamp(16px, 1.8vw, 21px); color: var(--muted); margin: 14px 0 0; line-height: 1.4; }
+    .content .date { font-size: clamp(16px, 1.6vw, 20px); color: var(--muted); margin: 24px 0 0; opacity: 0.7; }
+    .content h2 { font-size: clamp(24px, 3.2vw, 36px); margin: 0 0 20px; color: var(--accent); letter-spacing: -0.01em; line-height: 1.15; }
+    .content p { margin: 16px 0 0; color: var(--muted); line-height: 1.55; font-size: clamp(18px, 2.2vw, 24px); }
+    .content ul { margin: 18px 0 0; padding-left: 24px; color: var(--fg); line-height: 1.55; font-size: clamp(18px, 2.2vw, 24px); }
+    .content li { margin: 12px 0; }
+    .stage {
+      align-self: stretch;
+      border-radius: 16px;
+      border: 1px solid var(--stroke);
+      background: #05070b;
+      overflow: hidden;
+      position: relative;
+      min-height: 320px;
+    }
+    .note {
+      margin-top: 14px;
+      font-size: clamp(14px, 1.4vw, 17px);
+      color: rgba(255,255,255,0.60);
+    }
+    a { color: var(--accent); }
+
+    .stage * { box-sizing: border-box; }
+
+    .stage pre {
+      max-height: 70vh;
+      overflow: auto;
+      width: 100%;
+      max-width: 90%;
+      padding: clamp(18px, 2.5vw, 32px);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.03);
+      font: clamp(15px, 1.7vw, 20px)/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .stage img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .stageImg {
+      max-width: 90%;
+      max-height: 90%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    /* Stage layout helpers (reduce inline styles). */
+    .stageCenter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(20px, 3vw, 36px);
+      background: #070a10;
+    }
+    .stageInner {
+      width: 100%;
+      max-width: 90%;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.5;
+    }
+    .stageTitle { font-size: clamp(18px, 2vw, 24px); margin-bottom: 14px; opacity: 0.9; }
+    .stageBig { font-size: clamp(24px, 3vw, 34px); font-weight: 650; line-height: 1.35; }
+    .stageHint { margin-top: 22px; opacity: 0.72; font-size: clamp(16px, 1.6vw, 20px); }
+
+    .stageCompare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: center; }
+    .stageCompare .col { padding: 32px 28px; }
+    .stageCompare .col + .col { border-left: 1px solid rgba(255,255,255,0.12); }
+    .stageCompare .title { font-weight: 700; margin-bottom: 12px; font-size: clamp(20px, 2.4vw, 28px); }
+    .stageCompare .desc { opacity: 0.75; line-height: 1.5; font-size: clamp(17px, 2vw, 22px); }
+
+    .stageListTitle { font-weight: 700; margin-bottom: 14px; font-size: clamp(20px, 2.2vw, 26px); }
+    .stageList { margin: 0; padding-left: 22px; opacity: 0.9; font-size: clamp(17px, 1.8vw, 22px); line-height: 1.55; }
+
+    #loadError {
+      position: fixed;
+      inset: 14px 14px auto 14px;
+      z-index: 50;
+      display: none;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(16, 18, 26, 0.92);
+      color: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      max-width: 980px;
+    }
+    #loadError code { color: var(--accent); }
+
+    @media (min-width: 1400px) {
+      section.slide { padding: 48px 40px 28px; }
+      .stage { min-height: 520px; }
+    }
+
+    @media (max-width: 980px) {
+      header { padding: 8px 10px; }
+      header .left { gap: 8px; flex-wrap: wrap; }
+      #counter { font-size: 12px; }
+      .kbd { font-size: 11px; padding: 2px 6px; border-radius: 7px; }
+      #kbdSpace { display: none; }
+
+      section.slide.active { grid-template-columns: 1fr; }
+      section.slide { padding: 48px 16px 20px; }
+      .content { padding: 24px 20px 20px; }
+      .content h1 { font-size: 30px; }
+      .content h2 { font-size: 21px; }
+      .content p, .content ul { font-size: 17px; }
+      .content li { margin: 8px 0; }
+      .stage { min-height: 240px; }
+      .stageCompare .col { padding: 20px 16px; }
+    }
+
+    @media (max-width: 420px) {
+      section.slide { padding: 44px 10px 16px; }
+      .stage { min-height: 200px; }
+      .content { padding: 18px 14px 14px; }
+      .content h1 { font-size: 24px; }
+      .content h2 { font-size: 18px; }
+      .content p, .content ul { font-size: 15px; }
+      .content li { margin: 6px 0; }
+      .stage pre { max-height: 42vh; }
+      .stageCompare .col { padding: 14px 12px; }
+    }
+  </style>
 </head>
 <body>
-<div class="reveal">
-<div class="slides">
+  <header>
+    <div class="left">
+      <div id="counter">1 / 15</div>
+      <div class="kbd">← →</div>
+      <div class="kbd" id="kbdSpace">Space</div>
+      <div class="kbd" id="kbdSwipe">Swipe</div>
+    </div>
+  </header>
 
-<!-- 0: Welcome -->
-<section>
-  <h2>10 PRINT CHR$(205.5+RND(1)); : GOTO 10</h2>
-  <p class="small">One line of code. An infinite maze. (Commodore 64, 1982)</p>
-  <div class="artifact-container" id="art-tenprint"></div>
-</section>
+  <div id="loadError" role="alert"></div>
 
-<!-- 1: Icebreaker -->
-<section>
-  <h2>Describe an Algorithm You Already Know</h2>
-  <p>Think of something you do by following steps.<br>Describe it in <strong>three instructions or fewer</strong>.</p>
-  <ul>
-    <li>"If X, then Y" → <em>conditional</em></li>
-    <li>"Repeat until done" → <em>loop</em></li>
-    <li>"First A, then B, then C" → <em>sequence</em></li>
-  </ul>
-  <p class="small">Vera Molnar's <em>machine imaginaire</em>: executing algorithms by hand, before the computer.</p>
-</section>
+  <main>
+    <!-- Slide 1 -->
+    <section class="slide" data-artifact="tenPrint">
+      <div class="content">
+        <h1>Creative Coding with Generative AI</h1>
+        <p class="authors">Zach Muhlbauer &amp; Stefano Morello</p>
+        <p class="orgs">CUNY AI Lab · New Media Lab · Teaching and Learning Center</p>
+        <p class="date">February 19, 2025 · 4:00 PM</p>
+      </div>
+      <div class="stage" aria-label="10 PRINT stage"></div>
+    </section>
 
-<!-- 2: Origins -->
-<section>
-  <h2>Bell Labs & the First Computer Art</h2>
-  <h3>1962–1965: Noll, Nees, Nake</h3>
-  <div class="artifact-container" id="art-schotter"></div>
-  <p class="small">Georg Nees, <em>Schotter</em> (1968–70). Disorder grows row by row.</p>
-</section>
+    <!-- Slide 2 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Icebreaker</h1>
+        <h2>Describe an algorithm you already know</h2>
+        <ul>
+          <li>Write a routine in three steps or fewer</li>
+          <li>Name the shape: sequence, conditional, loop</li>
+          <li>See "rules executed by hand" as code</li>
+          <li>Share one example; spot the hidden logic</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Icebreaker prompt">
+        <div class="stageInner">
+          <div class="stageTitle">In chat, post:</div>
+          <div class="stageBig">"Describe something you do by following steps… in three instructions or fewer."</div>
+          <div class="stageHint">Look for: "If X then Y" (conditional), "Repeat until done" (loop), "First A then B" (sequence).</div>
+        </div>
+      </div>
+    </section>
 
-<!-- 3: Molnar -->
-<section>
-  <h2>The Machine Imaginaire</h2>
-  <h3>Vera Molnar (1924–2023)</h3>
-  <div class="artifact-container" id="art-molnar"></div>
-  <p class="small">Drag the void. Inspired by Molnar's <em>Interruptions</em>.</p>
-</section>
+    <!-- Slide 3 -->
+    <section class="slide" data-artifact="schotter">
+      <div class="content">
+        <h1>Origins (1962-1965)</h1>
+        <h2>Bell Labs + first computer art</h2>
+        <ul>
+          <li>Place early computer art in Bell Labs era</li>
+          <li>Combine equations with pseudo-random variation</li>
+          <li>Generate order first; introduce disorder gradually</li>
+          <li>Move from plotter output to public exhibitions</li>
+          <li>Click to re-roll the disorder</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Schotter stage"></div>
+    </section>
 
-<!-- 4: p5.js -->
-<section>
-  <h2>p5.js & the Browser as Canvas</h2>
-  <ul>
-    <li><strong>Processing</strong> (Reas & Fry, MIT 2001) → <strong>p5.js</strong> → browser</li>
-    <li>We use <strong>vanilla HTML/CSS/JS</strong> — no build step, no library, no account</li>
-    <li>LLMs generate <strong>single-file artifacts</strong> that open in any browser</li>
-    <li>Simon Willison's "HTML tools" pattern: self-contained, evergreen</li>
-  </ul>
-</section>
+    <!-- Slide 4 -->
+    <section class="slide" data-artifact="molnarInterruptions">
+      <div class="content">
+        <h1>Vera Molnar</h1>
+        <h2>The "machine imaginaire"</h2>
+        <ul>
+          <li>Define art as rules plus "a hint of disorder"</li>
+          <li>Constrain a system; let chance disturb it</li>
+          <li>Treat constraints as the artwork's engine</li>
+          <li>Connect constraint prompts to Molnar's method</li>
+          <li>Drag the interruption zone to disrupt the grid</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Molnar stage"></div>
+    </section>
 
-<!-- 5: Triangle -->
-<section>
-  <h2>The Creative Coding Triangle</h2>
-  <div class="artifact-container" id="art-triangle"></div>
-  <p class="small">Drag the point. Rules = System Prompt · Randomness = Temperature · Interpretation = Human Curation</p>
-</section>
+    <!-- Slide 5 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Creative Coding Today</h1>
+        <h2>p5.js + browser as canvas</h2>
+        <ul>
+          <li>Use the browser as a portable art canvas</li>
+          <li>Learn with p5.js; ship with plain HTML/JS</li>
+          <li>Prefer single-file artifacts you can share</li>
+          <li>Keep tools lightweight: no build step</li>
+        </ul>
+      </div>
+      <div class="stage stageCompare" aria-label="Tooling comparison">
+        <div class="col">
+          <div class="title">p5.js</div>
+          <div class="desc">Start fast with friendly drawing primitives.</div>
+        </div>
+        <div class="col">
+          <div class="title">Vanilla HTML/CSS/JS</div>
+          <div class="desc">Ship single-file sketches; run anywhere instantly.</div>
+        </div>
+      </div>
+    </section>
 
-<!-- 6: Vibe Coding -->
-<section>
-  <h2>What Is Vibe Coding?</h2>
-  <blockquote style="font-size:0.9em;">"Fully giving in to the vibes, embracing exponentials, and forgetting that the code even exists."<br><span class="small">— Andrej Karpathy, Feb 2025</span></blockquote>
-  <ul>
-    <li><strong>Vibe coding:</strong> don't review what the model produces</li>
-    <li><strong>LLM-assisted programming:</strong> thoughtfully read and iterate</li>
-  </ul>
-  <p class="small">— Simon Willison's distinction</p>
-</section>
+    <!-- Slide 6 -->
+    <section class="slide" data-artifact="triangle">
+      <div class="content">
+        <h1>Key Concept</h1>
+        <h2>The creative coding triangle</h2>
+        <ul>
+          <li>Map a piece across: Rules / Randomness / Interpretation</li>
+          <li>Shift the balance to change the work's feel</li>
+          <li>Translate to LLMs: system prompt / temperature / curation</li>
+          <li>Use the triangle to diagnose "why this output"</li>
+          <li>Drag the point to shift emphasis</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Triangle stage"></div>
+    </section>
 
-<!-- 7: Spectrum -->
-<section>
-  <h2>The Spectrum</h2>
-  <h3>From Vibe Coding to Deliberate Collaboration</h3>
-  <div class="artifact-container" id="art-spectrum"></div>
-  <p class="small">Xu et al. (2024): decomposed subtask invocation fosters deeper creative reflection.</p>
-</section>
+    <!-- Slide 7 -->
+    <section class="slide" data-artifact="spectrum">
+      <div class="content">
+        <h1>Vibe Coding</h1>
+        <h2>Prompts as prototypes</h2>
+        <ul>
+          <li>Prototype with prompts; test in the browser</li>
+          <li>Generate fast; evaluate with your own eyes</li>
+          <li>Contrast: "no-review" vs reviewed iteration</li>
+          <li>Adopt the mode that matches your goal</li>
+          <li>Attribute "vibe coding" to Karpathy (Feb 2025)</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Spectrum stage"></div>
+    </section>
 
-<!-- 8: Prompt Anatomy -->
-<section>
-  <h2>Anatomy of a Prompt</h2>
-  <ol style="font-size:0.9em;">
-    <li><strong>Role:</strong> "You are a creative coder who generates single-page HTML artifacts."</li>
-    <li><strong>Constraint:</strong> "Use only vanilla JavaScript — no external libraries."</li>
-    <li><strong>Aesthetic:</strong> "Monochrome, geometric, generative — early computer art."</li>
-    <li><strong>Technical:</strong> "Canvas API, full viewport, requestAnimationFrame."</li>
-    <li><strong>Output:</strong> "Return a single HTML file. No explanation — just code."</li>
-  </ol>
-</section>
+    <!-- Slide 8 -->
+    <section class="slide" data-artifact="flowField">
+      <div class="content">
+        <h1>Spectrum</h1>
+        <h2>Vibe → deliberate collaboration</h2>
+        <ul>
+          <li>Place AI coding on a continuum of control</li>
+          <li>Move from one-shot → iterate → constrain</li>
+          <li>Decompose tasks to increase reflection (Xu et al., 2024)</li>
+          <li>Design workflow to push toward deliberate choices</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Flow field stage"></div>
+    </section>
 
-<!-- 9: Live Demo -->
-<section>
-  <h2>Live Demo: CUNY AI Lab Sandbox</h2>
-  <ul>
-    <li>Select a model → Open config panel</li>
-    <li>Enter system prompt → Set temperature</li>
-    <li>Demo: <strong>0.3</strong> vs <strong>1.0</strong> vs <strong>1.5</strong> on same prompt</li>
-    <li>Demo: max tokens = 256 → truncated output</li>
-    <li>Temperature = Molnar's "hint of disorder"</li>
-  </ul>
-  <p class="small">tools.ailab.gc.cuny.edu</p>
-</section>
+    <!-- Slide 9 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Prompt Anatomy</h1>
+        <h2>Structure prompts for creative code</h2>
+        <ul>
+          <li>Assign a role: creative coder + collaborator</li>
+          <li>Constrain the stack: Canvas + vanilla JS</li>
+          <li>Declare the look: monochrome, geometric, early-computer</li>
+          <li>Require motion + interaction: rAF + input</li>
+          <li>Demand a runnable deliverable: single HTML only</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Prompt scaffold">
+        <pre>Copy/paste prompt scaffold:
 
-<!-- 10: Activity 1 -->
-<section>
-  <h2>Activity 1: One Prompt, One Artifact</h2>
-  <h3>Pure vibe coding · 10 min</h3>
-  <div class="artifact-container" id="art-starfield"></div>
-  <p class="small">Temp 0.9 · Max tokens 4096 · One prompt, no iteration.</p>
-</section>
+You are a creative coder.
+Constraints: vanilla JS only; Canvas; full viewport; no external libs.
+Aesthetic: monochrome; geometric; early computer art.
+Tech: requestAnimationFrame; mouse interaction.
+Output: return single HTML only (no markdown/explanation).</pre>
+      </div>
+    </section>
 
-<!-- 11: Activity 2 -->
-<section>
-  <h2>Activity 2: Iterate and Refine</h2>
-  <h3>Iterative prompting · 15 min</h3>
-  <ul>
-    <li>Take your Activity 1 artifact and <strong>improve through conversation</strong></li>
-    <li>"Add trails" → "Change palette" → "Add a speed control"</li>
-    <li>Iterate <strong>at least 3 times</strong>. Test each version.</li>
-    <li>Generate → Test → Describe what's wrong → Regenerate</li>
-  </ul>
-  <p class="small">System prompt instructs model to explain choices and suggest 3 modifications.</p>
-</section>
+    <!-- Slide 10 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Live Demo</h1>
+        <h2>CUNY AI Lab Sandbox (Open WebUI)</h2>
+        <ul>
+          <li>Open: <a href="https://chat.ailab.gc.cuny.edu" target="_blank" rel="noreferrer">chat.ailab.gc.cuny.edu</a></li>
+          <li>Create an account; await pending approval; then sign in</li>
+          <li>Confirm you're in by posting a 👍 in the chat</li>
+          <li>Choose a model: GLM 5 or Kimi K2.5 (MoE)</li>
+          <li>Open the Configuration panel (right side)</li>
+          <li>Paste the system prompt; set temperature + max tokens</li>
+          <li>Optional: model notes: <a href="https://ailab.gc.cuny.edu/models/" target="_blank" rel="noreferrer">ailab.gc.cuny.edu/models</a></li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="CUNY AI Lab Sandbox screenshot">
+        <img src="./assets/openwebui-kimi-k2.5.jpg" alt="CUNY AI Lab Sandbox interface showing the model picker (MoonshotAI: Kimi K2.5)" class="stageImg" />
+      </div>
+    </section>
 
-<!-- 12: Activity 3 -->
-<section>
-  <h2>Activity 3: Write the Rules</h2>
-  <h3>Constraint-based generation · the machine imaginaire · 15 min</h3>
-  <div class="artifact-container" id="art-constraint"></div>
-  <p class="small">Write your own system prompt. Define the rules. Send "Generate." Run 3× and select the best.</p>
-</section>
+    <!-- Slide 11 -->
+    <section class="slide" data-artifact="starfield">
+      <div class="content">
+        <h1>Activity 1 (10m)</h1>
+        <h2>One prompt, one artifact</h2>
+        <ul>
+          <li>Paste the Activity 1 system prompt</li>
+          <li>Set temperature 0.9; max tokens 4096</li>
+          <li>Write one prompt; generate once; no edits</li>
+          <li>Save the HTML; run it locally</li>
+          <li>Observe: what did the model assume?</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Starfield stage"></div>
+    </section>
 
-<!-- 13: Reflection -->
-<section>
-  <h2>Reflection</h2>
-  <h3>Mapping the Activities to the Triangle</h3>
-  <div class="artifact-container" id="art-reflection"></div>
-  <p class="small">A1: high Interpretation · A2: balanced · A3: high Rules — consumer → architect</p>
-</section>
+    <!-- Slide 12 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Activity 2 (15m)</h1>
+        <h2>Iterate and refine</h2>
+        <ul>
+          <li>Switch to the Activity 2 system prompt</li>
+          <li>Test the artifact; describe what changed</li>
+          <li>Request one change at a time; regenerate</li>
+          <li>Complete ≥3 rounds: generate → test → revise</li>
+          <li>Keep a log: prompt + parameters + outcome</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Activity 2 prompt">
+        <div class="stageInner">
+          <div class="stageBig">Request: "Keep the artifact, but add trails / change palette / add speed control UI."</div>
+          <div class="stageHint">Re-test each full HTML output.</div>
+        </div>
+      </div>
+    </section>
 
-<!-- 14: Takeaways -->
-<section>
-  <h2>What to Take With You</h2>
-  <ul>
-    <li><strong>Teaching:</strong> Three-activity scaffold (one-shot → iterative → constraint-based)</li>
-    <li><strong>Research:</strong> CUNY Sandbox — reproducible, privacy-respecting prototyping</li>
-    <li><strong>Practice:</strong> Single-page HTML = portable, hostable, shareable</li>
-  </ul>
-  <p style="margin-top:1em;"><strong>tools.ailab.gc.cuny.edu</strong></p>
-  <p class="small">Zach Muhlbauer & Stefano Morello · CUNY AI Lab</p>
-</section>
+    <!-- Slide 13 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Activity 3 (15m)</h1>
+        <h2>Write the rules, not the request</h2>
+        <ul>
+          <li>Write a constraint-based system prompt</li>
+          <li>Choose a temperature range; explore variation</li>
+          <li>Generate 3 versions; curate your favorite</li>
+          <li>Explain your rules like a score or recipe</li>
+          <li>Notice how constraints shape the aesthetic</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Activity 3 rules">
+        <pre>Copy/paste rules:
 
-</div>
-</div>
+1) Single HTML with inline CSS+JS
+2) Canvas only; no libraries
+3) Grid ≥ 100 elements
+4) Vary property by distance from center
+5) Exactly one randomness source
+6) Only 3 colors
+7) Fill viewport
+8) Animate with requestAnimationFrame
 
-<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
-<script src="src/tenprint.js"></script>
-<script src="src/schotter.js"></script>
-<script src="src/molnar.js"></script>
-<script src="src/triangle.js"></script>
-<script src="src/spectrum.js"></script>
-<script src="src/starfield.js"></script>
-<script src="src/constraint-grid.js"></script>
-<script src="src/reflection.js"></script>
-<script>
-const slideArtifacts = {
-  0:  { id: 'art-tenprint',    fn: initTenprint },
-  2:  { id: 'art-schotter',    fn: initSchotter },
-  3:  { id: 'art-molnar',      fn: initMolnar },
-  5:  { id: 'art-triangle',    fn: initTriangle },
-  7:  { id: 'art-spectrum',    fn: initSpectrum },
-  10: { id: 'art-starfield',   fn: initStarfield },
-  12: { id: 'art-constraint',  fn: initConstraintGrid },
-  13: { id: 'art-reflection',  fn: initReflection }
-};
-const loaded = {};
+Return HTML only</pre>
+      </div>
+    </section>
 
-function activateSlide(idx) {
-  if (loaded[idx] || !slideArtifacts[idx]) return;
-  const { id, fn } = slideArtifacts[idx];
-  const el = document.getElementById(id);
-  if (el && fn) { loaded[idx] = true; fn(el); }
-}
+    <!-- Slide 14 -->
+    <section class="slide" data-artifact="triangle">
+      <div class="content">
+        <h1>Reflection</h1>
+        <h2>Map activities to triangle</h2>
+        <ul>
+          <li>Locate Activity 1 near Interpretation</li>
+          <li>Locate Activity 2 between Rules and Interpretation</li>
+          <li>Locate Activity 3 near Rules (then curate)</li>
+          <li>Ask: what changed-rules, randomness, or judgment?</li>
+        </ul>
+      </div>
+      <div class="stage" aria-label="Triangle reflection stage"></div>
+    </section>
 
-Reveal.initialize({
-  hash: true, transition: 'fade', backgroundTransition: 'fade',
-  width: 1200, height: 700
-}).then(() => {
-  activateSlide(Reveal.getIndices().h);
-  Reveal.on('slidechanged', e => activateSlide(e.indexh));
-});
-</script>
+    <!-- Slide 15 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Takeaways</h1>
+        <h2>Keep what's portable</h2>
+        <ul>
+          <li>Teach a progression: one-shot → iterate → constraints</li>
+          <li>Save prompts + parameters to reproduce results</li>
+          <li>Share artifacts as single-page HTML sketches</li>
+          <li>Treat curation as part of the creative act</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Save the recipe">
+        <div class="stageInner">
+          <div class="stageListTitle">Save the recipe</div>
+          <ul class="stageList">
+            <li>System prompt</li>
+            <li>Model + temperature + max tokens</li>
+            <li>The HTML file (with a date)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 16 -->
+    <section class="slide">
+      <div class="content">
+        <h1>Resources</h1>
+        <h2>Links, citations, and prompts</h2>
+        <ul>
+          <li>System prompts + points of departure: <a href="https://github.com/milwrite/quimbot/blob/main/docs/itp-lab/prompts.md" target="_blank" rel="noreferrer">prompts.md</a></li>
+          <li>Slide outline (markdown): <a href="https://github.com/milwrite/quimbot/blob/main/docs/itp-lab/slides.md" target="_blank" rel="noreferrer">slides.md</a></li>
+          <li>Models (GLM 5 / Kimi K2.5): <a href="https://ailab.gc.cuny.edu/models/" target="_blank" rel="noreferrer">ailab.gc.cuny.edu/models</a></li>
+          <li>Full sources list (Appendix D): see GitHub folder link below</li>
+        </ul>
+      </div>
+      <div class="stage stageCenter" aria-label="Resources">
+        <div class="stageInner">
+          <div class="stageListTitle">Sources</div>
+          <ul class="stageList">
+            <li><em>10 PRINT CHR$(205.5+RND(1)); : GOTO 10.</em> MIT Press, 2012. <a href="https://10print.org/" target="_blank" rel="noreferrer">10print.org</a></li>
+            <li>Goodchild, A. "Early Computer Art in the 50s &amp; 60s." <a href="https://www.amygoodchild.com/blog/computer-art-50s-and-60s" target="_blank" rel="noreferrer">amygoodchild.com</a></li>
+            <li>Noll, A. M. "The Beginnings of Generative Art." <a href="https://ethw.org/First-Hand:The_Beginnings_of_Generative_Art" target="_blank" rel="noreferrer">ethw.org</a></li>
+            <li>V&amp;A Museum. "Vera Molnar: Machine Imaginaire." <a href="https://www.vam.ac.uk/blog/museum-life/vera-molnar-machine-imaginaire-the-dance-of-hands-and-machine-thinking" target="_blank" rel="noreferrer">vam.ac.uk</a></li>
+            <li>Xu, Y. et al. "Reflection in Human–LLM Co-Creation for Creative Coding." <em>arXiv:2402.09750</em>, 2024. <a href="https://arxiv.org/html/2402.09750v2" target="_blank" rel="noreferrer">arxiv.org</a></li>
+            <li>Willison, S. "Not all AI-assisted programming is vibe coding." 2025. <a href="https://simonwillison.net/2025/Mar/19/vibe-coding/" target="_blank" rel="noreferrer">simonwillison.net</a></li>
+            <li>Willison, S. "Useful patterns for building HTML tools with LLMs." 2025. <a href="https://simonwillison.net/2025/Dec/10/html-tools/" target="_blank" rel="noreferrer">simonwillison.net</a></li>
+            <li>Processing Foundation. <a href="https://processing.org/" target="_blank" rel="noreferrer">processing.org</a> · p5.js. <a href="https://p5js.org/" target="_blank" rel="noreferrer">p5js.org</a></li>
+            <li>CUNY AI Lab. <a href="https://ailab.gc.cuny.edu/" target="_blank" rel="noreferrer">ailab.gc.cuny.edu</a> · Sandbox. <a href="https://tools.ailab.gc.cuny.edu/" target="_blank" rel="noreferrer">tools.ailab.gc.cuny.edu</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { bootDeck } from './src/deck.js';
+
+    try {
+      bootDeck();
+    } catch (err) {
+      console.error('Failed to boot deck:', err);
+      const loadError = document.getElementById('loadError');
+      if (loadError) {
+        loadError.style.display = 'block';
+        loadError.innerHTML = `Deck failed to load.<br><br>${err.message}<br><br>Try a hard refresh. If it still fails, open your browser console for details.`;
+      }
+    }
+  </script>
 </body>
 </html>
