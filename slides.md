@@ -88,7 +88,7 @@ This workshop ties together creative coding and "vibe coding" with generative AI
 
 # **Slide 8**
 
-## **Spectrum**
+## **(Vibe) Coding with Intention**
 
 ### **Vibe → deliberate practice**
 
