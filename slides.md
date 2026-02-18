@@ -163,7 +163,7 @@ Stage text:
 * Complete ≥3 rounds: generate → test → revise  
 * Keep a log: prompt \+ parameters \+ outcome
 
-Request: “Keep the artifact, but add trails / change palette / add speed control UI.” Re-test each full HTML output.
+Example: "Keep the artifact, but add trails / change palette / add speed control UI." Re-test each full HTML output.
 
 ---
 
