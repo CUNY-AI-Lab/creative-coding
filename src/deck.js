@@ -8,6 +8,10 @@ let idx = 0;
 let slides = [];
 let mounted = new Map();
 
+/** True when the user prefers reduced motion. Artifacts can import this. */
+export const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
 
 function show(i) {
@@ -37,6 +41,13 @@ function show(i) {
   const counter = document.getElementById('counter');
   if (counter) counter.textContent = `${idx + 1} / ${slides.length}`;
 
+  // Move focus to the active slide so screen readers announce it
+  slide.focus({ preventScroll: true });
+
+  // Update skip-nav target
+  slide.id = 'current-slide';
+  slides.forEach((s, k) => { if (k !== idx) s.removeAttribute('id'); });
+
   history.replaceState(null, '', `#${idx + 1}`);
 }
 
@@ -44,7 +55,8 @@ function next() { show(idx + 1); }
 function prev() { show(idx - 1); }
 
 function onKey(e) {
-  if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); next(); }
+  if (e.key === ' ' && !isInteractiveTarget(e.target)) { e.preventDefault(); next(); }
   if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
   if (e.key === 'Home') { e.preventDefault(); show(0); }
   if (e.key === 'End') { e.preventDefault(); show(slides.length - 1); }

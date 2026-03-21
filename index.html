@@ -29,7 +29,7 @@
       pointer-events: none;
       z-index: 5;
     }
-    header .left, header .right { pointer-events: auto; display: flex; gap: 12px; align-items: center; }
+    header .left, header nav, header .right { pointer-events: auto; display: flex; gap: 12px; align-items: center; }
     #counter { font-variant-numeric: tabular-nums; opacity: 0.8; }
     .kbd {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -66,7 +66,7 @@
     .content h1 { font-size: clamp(36px, 5vw, 58px); margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.1; }
     .content .authors { font-size: clamp(20px, 2.4vw, 28px); color: var(--fg); margin: 24px 0 0; font-weight: 500; }
     .content .orgs { font-size: clamp(16px, 1.8vw, 21px); color: var(--muted); margin: 14px 0 0; line-height: 1.4; }
-    .content .date { font-size: clamp(16px, 1.6vw, 20px); color: var(--muted); margin: 24px 0 0; opacity: 0.7; }
+    .content .date { font-size: clamp(16px, 1.6vw, 20px); color: var(--muted); margin: 24px 0 0; opacity: 0.78; }
     .content h2 { font-size: clamp(24px, 3.2vw, 36px); margin: 0 0 20px; color: var(--accent); letter-spacing: -0.01em; line-height: 1.15; }
     .content p { margin: 16px 0 0; color: var(--muted); line-height: 1.55; font-size: clamp(18px, 2.2vw, 24px); }
     .content ul { margin: 18px 0 0; padding-left: 24px; color: var(--fg); line-height: 1.55; font-size: clamp(18px, 2.2vw, 24px); }
@@ -83,7 +83,7 @@
     .note {
       margin-top: 14px;
       font-size: clamp(14px, 1.4vw, 17px);
-      color: rgba(255,255,255,0.60);
+      color: rgba(255,255,255,0.68);
     }
     a { color: var(--accent); }
 
@@ -135,7 +135,7 @@
     }
     .stageTitle { font-size: clamp(18px, 2vw, 24px); margin-bottom: 14px; opacity: 0.9; }
     .stageBig { font-size: clamp(24px, 3vw, 34px); font-weight: 650; line-height: 1.35; }
-    .stageHint { margin-top: 22px; opacity: 0.72; font-size: clamp(16px, 1.6vw, 20px); }
+    .stageHint { margin-top: 22px; opacity: 0.78; font-size: clamp(16px, 1.6vw, 20px); }
 
     .stageCompare { display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: center; }
     .stageCompare .col { padding: 32px 28px; }
@@ -200,23 +200,49 @@
 
     .mobile-only { display: none; }
     .desktop-only { display: inline; }
+
+    /* Accessibility utilities */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    #skip-nav {
+      position: fixed; top: -100%; left: 16px; z-index: 100;
+      padding: 8px 16px; border-radius: 8px;
+      background: var(--fg); color: var(--bg);
+      font-weight: 600; font-size: 14px;
+      text-decoration: none;
+    }
+    #skip-nav:focus { top: 12px; }
+    section.slide:focus { outline: none; }
+    section.slide:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 4px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="left">
-      <div id="counter">1 / 15</div>
+  <a id="skip-nav" href="#current-slide">Skip to slide</a>
+  <header role="banner">
+    <nav class="left" aria-label="Slide navigation">
+      <div id="counter" role="status" aria-live="polite" aria-atomic="true">1 / 15</div>
       <div class="kbd">← →</div>
       <div class="kbd" id="kbdSpace">Space</div>
       <div class="kbd" id="kbdSwipe">Swipe</div>
-    </div>
+    </nav>
   </header>
 
   <div id="loadError" role="alert"></div>
 
   <main>
     <!-- Slide 1 -->
-    <section class="slide" data-artifact="tenPrint">
+    <section class="slide" data-artifact="tenPrint" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 1: Creative Coding with Generative AI">
       <div class="content">
         <h1>Creative Coding with Generative AI</h1>
         <p class="authors">Zach Muhlbauer &amp; Stefano Morello</p>
@@ -224,11 +250,11 @@
         <p class="orgs">Interactive Technology and Pedagogy Certificate Program</p>
         <p class="date">February 19, 2026 · 4:00 PM</p>
       </div>
-      <div class="stage" aria-label="10 PRINT stage"></div>
+      <div class="stage" aria-label="Animated 10 PRINT maze pattern of diagonal lines in retro computer style"></div>
     </section>
 
     <!-- Slide 2 -->
-    <section class="slide">
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 2: Icebreaker">
       <div class="content">
         <h1>Icebreaker</h1>
         <h2>Describe an algorithm you already know</h2>
@@ -252,7 +278,7 @@
     </section>
 
     <!-- Slide 3 -->
-    <section class="slide" data-artifact="schotter">
+    <section class="slide" data-artifact="schotter" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 3: Origins 1962-1965">
       <div class="content">
         <h1>Origins (1962-1965)</h1>
         <h2>Bell Labs + first computer art</h2>
@@ -263,11 +289,11 @@
           <li>Moved from plotter demonstrations to public exhibitions</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Schotter stage"></div>
+      <div class="stage" aria-label="Grid of squares with increasing rotation and displacement, inspired by Georg Nees' Schotter"></div>
     </section>
 
     <!-- Slide 4 -->
-    <section class="slide" data-artifact="molnarInterruptions">
+    <section class="slide" data-artifact="molnarInterruptions" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 4: Vera Molnar">
       <div class="content">
         <h1>Vera Molnar</h1>
         <h2>The "machine imaginaire"</h2>
@@ -278,11 +304,11 @@
           <li>Drag the interruption zone to disrupt the grid</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Molnar stage"></div>
+      <div class="stage" aria-label="Interactive grid of line segments with a draggable void that removes lines, inspired by Vera Molnar"></div>
     </section>
 
     <!-- Slide 5 -->
-    <section class="slide">
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 5: Creative Coding Today">
       <div class="content">
         <h1>Creative Coding Today</h1>
         <h2>Web browser as canvas</h2>
@@ -305,7 +331,7 @@
     </section>
 
     <!-- Slide 6 -->
-    <section class="slide" data-artifact="triangle">
+    <section class="slide" data-artifact="triangle" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 6: Key Concept — The Creative Coding Triangle">
       <div class="content">
         <h1>Key Concept</h1>
         <h2>The creative coding triangle</h2>
@@ -319,11 +345,11 @@
           </li>
         </ul>
       </div>
-      <div class="stage" aria-label="Triangle stage"></div>
+      <div class="stage" aria-label="Interactive triangle with a draggable point constrained inside, demonstrating rules, randomness, and interpretation"></div>
     </section>
 
     <!-- Slide 7 -->
-    <section class="slide" data-artifact="vibeCoding">
+    <section class="slide" data-artifact="vibeCoding" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 7: Vibe Coding">
       <div class="content">
         <h1>Vibe Coding</h1>
         <h2>Prompts as prototypes</h2>
@@ -335,11 +361,11 @@
           <li>Adopt the mode that matches your goal</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Vibe coding stage"></div>
+      <div class="stage" aria-label="Cycling animation showing generative patterns materializing from prompts"></div>
     </section>
 
-    <!-- Slide 8: Behind the Scenes -->
-    <section class="slide" data-artifact="dataFlow">
+    <!-- Slide 8 -->
+    <section class="slide" data-artifact="dataFlow" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 8: Behind the Scenes">
       <div class="content">
         <h1>Behind the Scenes</h1>
         <h2>How models learn to code</h2>
@@ -350,11 +376,11 @@
           <li>Output is probabilistic: same prompt can yield different results</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Data flow stage"></div>
+      <div class="stage" aria-label="Animated diagram showing training data flowing from GitHub, Stack Overflow, and documentation into an AI model, with code streaming out"></div>
     </section>
 
     <!-- Slide 9 -->
-    <section class="slide" data-artifact="spectrum">
+    <section class="slide" data-artifact="spectrum" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 9: Coding with Intention">
       <div class="content">
         <h1>(Vibe) Coding with Intention</h1>
         <h2>Vibe → deliberate practice</h2>
@@ -365,11 +391,11 @@
           <li>Utilize constraints to foster more deliberate choices</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Flow field stage"></div>
+      <div class="stage" aria-label="Interactive slider ranging from vibe coding to deliberate practice, with a visual flow field that changes based on position"></div>
     </section>
 
-    <!-- Slide 9 -->
-    <section class="slide">
+    <!-- Slide 10 -->
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 10: Prompt Anatomy">
       <div class="content">
         <h1>Prompt Anatomy</h1>
         <h2>Structure prompts for creative code</h2>
@@ -392,8 +418,8 @@ Output: return single HTML only (no markdown/explanation).</pre>
       </div>
     </section>
 
-    <!-- Slide 10 -->
-    <section class="slide">
+    <!-- Slide 11 -->
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 11: Live Demo">
       <div class="content">
         <h1>Live Demo</h1>
         <h2>CUNY AI Lab Sandbox (Open WebUI)</h2>
@@ -405,13 +431,13 @@ Output: return single HTML only (no markdown/explanation).</pre>
         </ol>
         <p class="note">Optional model registry: <a href="https://ailab.gc.cuny.edu/models/" target="_blank" rel="noreferrer">ailab.gc.cuny.edu/models</a></p>
       </div>
-      <div class="stage stageCenter" aria-label="CUNY AI Lab Sandbox screenshot">
+      <div class="stage stageCenter" aria-label="Screenshot of CUNY AI Lab Sandbox interface showing the model picker with Kimi K2.5 selected">
         <img src="./assets/openwebui-kimi-k2.5.jpg" alt="CUNY AI Lab Sandbox interface showing the model picker (MoonshotAI: Kimi K2.5)" class="stageImg" style="object-fit:cover;height:100%;max-height:100%;width:100%;max-width:100%;border-radius:0;" />
       </div>
     </section>
 
-    <!-- Slide 11 -->
-    <section class="slide" data-artifact="starfield">
+    <!-- Slide 12 -->
+    <section class="slide" data-artifact="starfield" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 12: Activity 1 — Constrained Generation">
       <div class="content">
         <h1>Activity 1 (10m)</h1>
         <h2>Constrained Generation</h2>
@@ -423,7 +449,7 @@ Output: return single HTML only (no markdown/explanation).</pre>
           <pre style="font-size: 14px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; color: rgba(255,255,255,0.8); margin: 0;">Role: You are a creative coding assistant.
 Constraints: Follow constraints exactly as specified.
 Output: Single HTML files with embedded CSS and JavaScript.</pre>
-          <button onclick="navigator.clipboard.writeText('Role: You are a creative coding assistant.\\nConstraints: Follow constraints exactly as specified.\\nOutput: Single HTML files with embedded CSS and JavaScript.')" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Copy</button>
+          <button aria-label="Copy system prompt to clipboard" onclick="navigator.clipboard.writeText('Role: You are a creative coding assistant.\\nConstraints: Follow constraints exactly as specified.\\nOutput: Single HTML files with embedded CSS and JavaScript.').then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy'},1500)})" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8); padding: 4px 8px; border-radius: 3px; font-size: 10px; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">Copy</button>
         </div>
         <ul style="margin-top: 0;">
           <li>Try user prompts with specific limits:</li>
@@ -432,11 +458,11 @@ Output: Single HTML files with embedded CSS and JavaScript.</pre>
           <li style="margin-left: 20px;">"Make generative art that tiles like wallpaper"</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Starfield stage"></div>
+      <div class="stage" aria-label="Animated starfield with parallax scrolling that responds to mouse movement"></div>
     </section>
 
-    <!-- Slide 12 -->
-    <section class="slide">
+    <!-- Slide 13 -->
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 13: Activity 2 — Iterate and Refine">
       <div class="content">
         <h1>Activity 2 (15m)</h1>
         <h2>Iterate and Refine</h2>
@@ -457,8 +483,8 @@ Output: Single HTML files with embedded CSS and JavaScript.</pre>
       </div>
     </section>
 
-    <!-- Slide 13 -->
-    <section class="slide" data-artifact="constraintGrid">
+    <!-- Slide 14 -->
+    <section class="slide" data-artifact="constraintGrid" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 14: Activity 3 — Parameter Exploration">
       <div class="content">
         <h1>Activity 3 (15m)</h1>
         <h2>Parameter Exploration</h2>
@@ -470,11 +496,11 @@ Output: Single HTML files with embedded CSS and JavaScript.</pre>
           <li>How do these parameters change the AI's creative output?</li>
         </ul>
       </div>
-      <div class="stage" aria-label="Constraint grid artifact"></div>
+      <div class="stage" aria-label="Animated 12 by 12 grid of circles with varying radii, demonstrating constraint-based generative design"></div>
     </section>
 
-    <!-- Slide 14 -->
-    <section class="slide">
+    <!-- Slide 15 -->
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 15: Takeaways">
       <div class="content">
         <h1>Takeaways</h1>
         <h2>Keep what's portable</h2>
@@ -498,7 +524,7 @@ Output: Single HTML files with embedded CSS and JavaScript.</pre>
     </section>
 
     <!-- Slide 16 -->
-    <section class="slide">
+    <section class="slide" tabindex="-1" role="group" aria-roledescription="slide" aria-label="Slide 16: Resources">
       <div class="content">
         <h1>Resources</h1>
         <h2>Links, citations, and prompts</h2>
@@ -530,6 +556,14 @@ Output: Single HTML files with embedded CSS and JavaScript.</pre>
 
   <script type="module">
     import { bootDeck } from './src/deck.js';
+
+    // Announce external links to screen readers
+    document.querySelectorAll('a[target="_blank"]').forEach(a => {
+      const hint = document.createElement('span');
+      hint.className = 'sr-only';
+      hint.textContent = ' (opens in new tab)';
+      a.append(hint);
+    });
 
     try {
       bootDeck();
